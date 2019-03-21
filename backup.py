@@ -155,15 +155,19 @@ def clone_repo(
     slug_url = quote(slug)
     command = None
     if scm == "hg":
+        hg_command = 'hg clone'
+        if mirror:
+            hg_command = 'hg clone --noupdate'
         if http:
-            command = "hg clone https://%s:%s@bitbucket.org/%s/%s" % (
+            command = "%s https://%s:%s@bitbucket.org/%s/%s" % (
+                hg_command,
                 quote(username),
                 quote(password),
                 owner_url,
                 slug_url,
             )
         else:
-            command = "hg clone ssh://hg@bitbucket.org/%s/%s" % (owner_url, slug_url)
+            command = "%s ssh://hg@bitbucket.org/%s/%s" % (hg_command, owner_url, slug_url)
     if scm == "git":
         git_command = "git clone"
         if mirror:
